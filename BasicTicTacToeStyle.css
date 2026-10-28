@@ -1,0 +1,146 @@
+/* ===== Basic Tic Tac Toe - responsive styles ===== */
+
+:root {
+    /* Side length of the board. Shrinks to fit the screen width AND height. */
+    --board: max(240px, min(90vw, calc(100vh - 330px), 440px));
+}
+@supports (height: 100dvh) {
+    :root {
+        --board: max(240px, min(90vw, calc(100dvh - 330px), 440px));
+    }
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-display);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: max(10px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right))
+             max(10px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left));
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;   /* no double-tap zoom while playing */
+}
+
+/* ---------- Page layout ---------- */
+
+.gameContainer {
+    display: grid;
+    grid-template-areas:
+        "title"
+        "options"
+        "board"
+        "status"
+        "controls";
+    justify-items: center;
+    gap: 12px;
+    text-align: center;
+}
+.title {
+    grid-area: title;
+    font-size: clamp(1.5rem, 6vw, 2.4rem);
+    font-weight: normal;
+}
+#statusBar {
+    grid-area: status;
+    font-size: clamp(1.1rem, 4vw, 1.6rem);
+    font-weight: normal;
+    min-height: 1.4em;
+}
+.controls {
+    grid-area: controls;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+/* ---------- Board ---------- */
+
+.cellContainer {
+    grid-area: board;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 3px;                     /* grid lines */
+    width: var(--board);
+    aspect-ratio: 1;
+    background: var(--line);
+    border-radius: 6px;
+    position: relative;
+    overflow: hidden;
+}
+
+.cell {
+    background: var(--cell);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(var(--board) / 3 * 0.62);
+    line-height: 1;
+    cursor: pointer;
+    user-select: none;
+    min-width: 0;
+    min-height: 0;
+}
+.cell.X { color: var(--x); }
+.cell.O { color: var(--o); }
+
+.cell.disabled {
+    background: var(--cell-disabled);
+    pointer-events: none;
+}
+@media (hover: hover) {
+    .cell:not(.disabled):hover {
+        background: var(--active);
+    }
+}
+
+/* Winner overlay (shown by BasicTicTacToeLogic.js) */
+.overlay {
+    position: absolute;
+    inset: 0;
+    background: transparent;      /* the big letter is a watermark, so the three winning symbols stay visible under the line */
+    display: none;                /* hidden until someone wins */
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+.winnerChar {
+    opacity: 0.28;
+    font-size: calc(var(--board) * 0.7);
+    line-height: 1;
+}
+.winnerChar.X { color: var(--x); }
+.winnerChar.O { color: var(--o); }
+
+/* ---------- Phones held sideways (short, wide screens) ---------- */
+/* Board on the left, title / status / buttons stacked on the right. */
+
+@media (orientation: landscape) and (max-height: 520px) {
+    :root {
+        --board: max(200px, min(60vw, calc(100vh - 28px)));
+    }
+    .gameContainer {
+        grid-template-columns: auto minmax(170px, 260px);
+        grid-template-areas:
+            "board title"
+            "board options"
+            "board status"
+            "board controls";
+        align-content: center;
+        column-gap: 20px;
+    }
+    .title,
+    .optionsRow,
+    #statusBar,
+    .controls {
+        align-self: center;
+    }
+}

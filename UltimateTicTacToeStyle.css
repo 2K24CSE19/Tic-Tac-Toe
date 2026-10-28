@@ -1,0 +1,192 @@
+/* ===== Ultimate Tic Tac Toe - responsive styles ===== */
+
+:root {
+    /* Side length of the whole 9x9 board. Shrinks to fit the screen width AND height. */
+    --board: max(250px, min(94vw, calc(100vh - 310px), 720px));
+}
+@supports (height: 100dvh) {
+    :root {
+        --board: max(250px, min(94vw, calc(100dvh - 310px), 720px));
+    }
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-display);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: max(10px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right))
+             max(10px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left));
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;   /* no double-tap zoom while playing */
+}
+
+/* ---------- Page layout ---------- */
+
+.gameContainer {
+    display: grid;
+    grid-template-areas:
+        "title"
+        "options"
+        "board"
+        "status"
+        "controls";
+    justify-items: center;
+    gap: 10px;
+    text-align: center;
+}
+.title {
+    grid-area: title;
+    font-size: clamp(1.3rem, 5vw, 2.2rem);
+    font-weight: normal;
+}
+#statusBar {
+    grid-area: status;
+    font-size: clamp(1rem, 3.6vw, 1.5rem);
+    font-weight: normal;
+    min-height: 2.6em;            /* reserve 2 lines so the board never jumps */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: var(--board);
+}
+.controls {
+    grid-area: controls;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+/* ---------- Master grid (3x3 of small boards) ---------- */
+
+.container {
+    grid-area: board;
+    position: relative;                  /* the winning line across three mini-boards is drawn inside it */
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 4px;                     /* thick lines between small boards */
+    padding: 4px;
+    width: var(--board);
+    background: var(--line);
+    border-radius: 6px;
+}
+
+/* ---------- Small board (3x3 of cells) ---------- */
+
+.cellContainer {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 1px;                     /* thin lines between cells */
+    background: var(--thin-line);
+    aspect-ratio: 1;
+    position: relative;
+    min-width: 0;
+}
+
+.cell {
+    background: var(--cell);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(var(--board) / 9 * 0.62);
+    line-height: 1;
+    cursor: pointer;
+    user-select: none;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+}
+.cell.X { color: var(--x); }
+.cell.O { color: var(--o); }
+
+/* Cells that can't be played right now */
+.cell.disabled {
+    background: var(--cell-disabled);
+    pointer-events: none;
+}
+
+/* Board(s) where a move is allowed right now. The colour says whose move it is:
+   green = YOUR move (you can play here); yellow = the opponent's move, or you are only watching.
+   Border + glow (not just a fill), and a dashed border for yellow so it doesn't rely on colour alone. */
+.cellContainer.active {
+    z-index: 1;
+    outline: 3px dashed var(--wait-yellow);
+    outline-offset: -3px;
+    box-shadow: 0 0 12px 2px var(--wait-yellow-glow);
+}
+.cellContainer.active .cell {
+    background: var(--wait-yellow-bg);
+}
+.cellContainer.active.mine {
+    outline: 3px solid var(--turn-green);
+    box-shadow: 0 0 12px 2px var(--turn-green-glow);
+}
+.cellContainer.active.mine .cell {
+    background: var(--turn-green-bg);
+}
+@media (hover: hover) {
+    .cellContainer.active.mine .cell:not(.X):not(.O):hover {
+        background: var(--active-hover);
+        filter: brightness(0.95);
+    }
+}
+
+/* Tied small board: claimed by neither player */
+.cellContainer.drawn .cell {
+    opacity: 0.6;
+}
+
+/* Won small board: big X / O drawn over it */
+.cellContainer[data-winner]::after {
+    content: attr(data-winner);
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(var(--board) / 3 * 0.8);
+    line-height: 1;
+    background-color: var(--overlay-soft);
+    pointer-events: none;
+}
+.cellContainer.wonX::after { color: var(--x); color: color-mix(in srgb, var(--x) 55%, transparent); }   /* a watermark: the symbols and the line stay readable */
+.cellContainer.wonO::after { color: var(--o); color: color-mix(in srgb, var(--o) 55%, transparent); }
+
+/* ---------- Phones held sideways (short, wide screens) ---------- */
+/* Board on the left, title / status / buttons stacked on the right. */
+
+@media (orientation: landscape) and (max-height: 520px) {
+    :root {
+        --board: max(200px, min(60vw, calc(100vh - 28px)));
+    }
+    .gameContainer {
+        grid-template-columns: auto minmax(170px, 260px);
+        grid-template-areas:
+            "board title"
+            "board options"
+            "board status"
+            "board controls";
+        align-content: center;
+        column-gap: 20px;
+    }
+    .title,
+    .optionsRow,
+    #statusBar,
+    .controls {
+        align-self: center;
+    }
+    #statusBar {
+        max-width: none;
+        min-height: 0;
+    }
+}

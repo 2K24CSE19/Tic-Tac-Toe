@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#faf7f0">
+    <meta name="description" content="Play classic Tic Tac Toe or Ultimate Tic Tac Toe (9 boards, 81 squares) in your browser, on any device.">
+    <title>Tic Tac Toe - Basic &amp; Ultimate</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="SharedStyle.css">
+    <link rel="stylesheet" href="LandingPageStyle.css">
+    <script src="Theme.js"></script>
+</head>
+<body>
+    <div class="page">
+
+        <header class="topbar">
+            <span class="brand">Tic Tac Toe</span>
+            <button id="themeToggle" class="themeToggle" type="button"></button>
+        </header>
+
+        <main>
+            <!-- Hero -->
+            <section class="hero">
+                <h1>Tic Tac <span id="toeWord" class="toe"><span class="x">T</span><span class="o">o</span>e</span></h1>
+                <p class="tagline">Two ways to play: the classic you know, and its 81-square big brother.</p>
+                <div class="cta">
+                    <a class="btn primary big" href="UltimateTicTacToe.html">Play Ultimate</a>
+                    <a class="btn big" href="BasicTicTacToe.html">Play Basic</a>
+                </div>
+                <p class="note">Play a friend on one screen or online with a private room code, or take on the computer on four levels, from Easy to Impossible. Works on phone, tablet, laptop and desktop.</p>
+            </section>
+
+            <!-- Game cards -->
+            <section class="games" aria-label="Choose a game">
+                <article class="card">
+                    <div class="preview" id="previewBasic" aria-hidden="true"></div>
+                    <h2>Basic</h2>
+                    <p>One 3&times;3 board. Get three in a row before your opponent does. A quick game to warm up. The Impossible computer here never loses.</p>
+                    <a class="btn" href="BasicTicTacToe.html">Play Basic</a>
+                </article>
+
+                <article class="card">
+                    <div class="preview" id="previewUltimate" aria-hidden="true"></div>
+                    <h2>Ultimate</h2>
+                    <p>Nine boards in one. Every move decides where your opponent plays next. Think two steps ahead, or test yourself against the computer.</p>
+                    <a class="btn primary" href="UltimateTicTacToe.html">Play Ultimate</a>
+                </article>
+            </section>
+
+            <!-- Rules -->
+            <section class="rules" id="rules">
+                <h2>How to play Ultimate</h2>
+                <ol class="steps">
+                    <li>
+                        <h3>Your move picks their board</h3>
+                        <p>Where you play inside a small board decides which small board your opponent must play in next. Play the top-right square, and they play in the top-right board. X starts, and the first move can go anywhere.</p>
+                    </li>
+                    <li>
+                        <h3>Win small boards</h3>
+                        <p>Get three in a row inside a small board to claim it with a big X or O. A claimed board is closed, and no more moves can be made in it. A full board with no line is a tie and belongs to nobody.</p>
+                    </li>
+                    <li>
+                        <h3>Free turn</h3>
+                        <p>If you are sent to a board that is already won, full or tied, you get a free turn. Play in any open square on any open board.</p>
+                    </li>
+                    <li>
+                        <h3>Win the game</h3>
+                        <p>Claim three small boards in a row on the big grid. If the whole grid fills up with no line, whoever claimed the most small boards wins. Equal boards is a draw.</p>
+                    </li>
+                </ol>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <a href="BasicTicTacToe.html">Basic</a>
+            <span aria-hidden="true">&middot;</span>
+            <a href="UltimateTicTacToe.html">Ultimate</a>
+            <span aria-hidden="true">&middot;</span>
+            <a href="#rules">Rules</a>
+        </footer>
+    </div>
+    <script src="LandingPage.js"></script>
+</body>
+</html>

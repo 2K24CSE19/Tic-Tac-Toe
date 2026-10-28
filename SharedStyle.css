@@ -1,0 +1,518 @@
+/* ===== Shared theme, used by every page ===== */
+
+:root {
+    /* ---- Light theme (default) ---- */
+    --bg: #faf7f0;
+    --text: #222;
+    --muted: #5c5c5c;
+    --card: #fff;
+    --line: #222;               /* thick board lines, borders */
+    --thin-line: #8a8a8a;       /* thin lines between cells */
+    --cell: #fff;
+    --cell-disabled: #dcdcdc;
+    --active: #fff3a8;          /* (legacy) yellow tint */
+    --active-hover: #ffe45c;
+    /* Ultimate: the board(s) where a move is allowed. Green = your move, yellow = the opponent's (or a spectator's view) */
+    --turn-green: #1b8a4b;
+    --turn-green-bg: #d4f3df;
+    --turn-green-glow: rgba(27, 138, 75, 0.55);
+    --wait-yellow: #b88700;
+    --wait-yellow-bg: #fff3a8;
+    --wait-yellow-glow: rgba(224, 168, 0, 0.55);
+    --overlay: rgba(255, 255, 255, 0.8);
+    --overlay-soft: rgba(255, 255, 255, 0.35);   /* lets the winning symbols (and the winning line) show through */
+    --x: #e53935;
+    --o: #1e63d6;
+    --btn-bg: #fff;
+    --btn-hover: #f0e9d6;
+    --attn-glow: rgba(30, 99, 214, 0.6);
+    --primary-bg: #1e63d6;
+    --primary-text: #fff;
+    --font-display: "Permanent Marker", cursive;
+    --font-body: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+    --bg: #16181d;
+    --text: #eceff4;
+    --muted: #a7adba;
+    --card: #1f232c;
+    --line: #cfd3dc;
+    --thin-line: #5a6070;
+    --cell: #242833;
+    --cell-disabled: #1a1d25;
+    --active: #5e4f12;
+    --active-hover: #756218;
+    --turn-green: #3ddc84;
+    --turn-green-bg: #1c4a31;
+    --turn-green-glow: rgba(61, 220, 132, 0.55);
+    --wait-yellow: #ffd23f;
+    --wait-yellow-bg: #5e4f12;
+    --wait-yellow-glow: rgba(255, 210, 63, 0.5);
+    --overlay: rgba(22, 24, 29, 0.82);
+    --overlay-soft: rgba(22, 24, 29, 0.35);
+    --x: #ff6b6b;
+    --o: #5ea1ff;
+    --btn-bg: #242833;
+    --btn-hover: #31374a;
+    --attn-glow: rgba(94, 161, 255, 0.65);
+    --primary-bg: #5ea1ff;
+    --primary-text: #0b1020;
+    color-scheme: dark;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    transition: background-color 0.2s, color 0.2s;
+}
+
+/* ---------- Buttons ---------- */
+
+button,
+.btn {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    color: var(--text);
+    background: var(--btn-bg);
+    border: 2px solid var(--line);
+    border-radius: 10px;
+    min-height: 44px;             /* comfortable touch target */
+    padding: 0 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    cursor: pointer;
+}
+button:hover,
+.btn:hover {
+    background: var(--btn-hover);
+}
+button:focus-visible,
+.btn:focus-visible {
+    outline: 3px solid var(--o);
+    outline-offset: 2px;
+}
+.btn.primary {
+    background: var(--primary-bg);
+    border-color: var(--primary-bg);
+    color: var(--primary-text);
+}
+.btn.primary:hover {
+    filter: brightness(1.1);
+}
+
+/* Mode / difficulty / side pickers */
+.optionsRow {
+    grid-area: options;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+}
+select {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    color: var(--text);
+    background: var(--btn-bg);
+    border: 2px solid var(--line);
+    border-radius: 10px;
+    min-height: 44px;
+    padding: 0 10px;
+    cursor: pointer;
+}
+select:hover {
+    background: var(--btn-hover);
+}
+select:focus-visible {
+    outline: 3px solid var(--o);
+    outline-offset: 2px;
+}
+
+/* Round sun / moon theme switch */
+.themeToggle {
+    width: 44px;
+    padding: 0;
+    font-size: 1.2rem;
+    line-height: 1;
+}
+
+/* Narrow phones: slimmer buttons so Reset / mode / Home / theme fit on one row */
+@media (max-width: 420px) {
+    .controls {
+        gap: 8px;
+    }
+    .controls button,
+    .controls .btn {
+        padding: 0 11px;
+        font-size: 0.9rem;
+    }
+    .optionsRow {
+        gap: 6px;
+    }
+    select {
+        font-size: 0.85rem;
+        padding: 0 6px;
+    }
+    .controls .themeToggle {
+        width: 44px;
+        padding: 0;
+        font-size: 1.1rem;
+    }
+}
+
+/* ---------- Online lobby ---------- */
+
+[hidden] {
+    display: none !important;      /* the hidden attribute must win over display: flex / inline-flex rules */
+}
+
+/* While Online mode is on, the lobby takes the place of the board (until both players are in the room) */
+.gameContainer.isOnline:not(.inGame) > .container,
+.gameContainer.isOnline:not(.inGame) > .cellContainer {
+    display: none;
+}
+
+/* Playing online: the room bar replaces the mode dropdowns */
+.gameContainer.inGame .optionsRow {
+    display: none;
+}
+.roomBar {
+    grid-area: options;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+}
+.roomTag {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    letter-spacing: 0.05em;
+}
+.spectatorBadge {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 999px;
+    border: 1px dashed var(--thin-line);
+    color: var(--muted);
+}
+.chipSmall {
+    font-size: 0.78rem;
+    padding: 4px 8px;
+}
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border: 1px solid var(--thin-line);
+    border-radius: 999px;
+    background: var(--card);
+}
+
+/* The square that was played last (online): outlined in the player's colour */
+.cell.lastMove {
+    box-shadow: inset 0 0 0 3px currentColor;
+}
+
+.onlinePanel {
+    grid-area: board;
+    width: var(--board);
+    min-width: min(100%, 280px);
+}
+.onlineCard {
+    background: var(--card);
+    border: 2px solid var(--line);
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    text-align: center;
+}
+.onlineCard h2 {
+    font-size: 1.5rem;
+    font-weight: normal;
+}
+.onlineHint {
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    color: var(--muted);
+}
+.orLine {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+.orLine::before,
+.orLine::after {
+    content: "";
+    flex: 1;
+    border-top: 1px solid var(--thin-line);
+}
+.joinRow {
+    display: flex;
+    gap: 8px;
+}
+.joinRow input {
+    flex: 1;
+    min-width: 0;
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    letter-spacing: 0.15em;
+    text-align: center;
+    text-transform: uppercase;
+    color: var(--text);
+    background: var(--cell);
+    border: 2px solid var(--line);
+    border-radius: 10px;
+    min-height: 44px;
+    padding: 0 8px;
+}
+.joinRow input::placeholder {
+    letter-spacing: normal;
+    text-transform: none;
+    color: var(--muted);
+}
+.joinRow input:focus-visible {
+    outline: 3px solid var(--o);
+    outline-offset: 2px;
+}
+button:disabled,
+select:disabled,
+input:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+.onlineMessage {
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    min-height: 1.3em;
+    color: var(--muted);
+}
+.onlineMessage[data-kind="error"] { color: var(--x); }
+.onlineMessage[data-kind="ok"] { color: var(--o); }
+.onlineMessage a { color: var(--text); }
+
+.roomLabel {
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    color: var(--muted);
+}
+.roomCode {
+    /* easy to read out loud and copy: monospace, bold, wide spacing, in its own box */
+    font-family: ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", "JetBrains Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    font-weight: 700;
+    font-variant-ligatures: none;
+    font-size: clamp(2rem, 11vw, 3.2rem);
+    letter-spacing: 0.22em;
+    padding: 6px 8px 6px calc(8px + 0.22em);      /* the extra left padding balances the trailing letter-spacing */
+    line-height: 1.15;
+    align-self: center;
+    background: var(--cell);
+    border: 2px dashed var(--thin-line);
+    border-radius: 12px;
+    user-select: all;
+}
+#barCode {
+    font-family: ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", "JetBrains Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+}
+.roomActions {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.seats {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    text-align: left;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+}
+.seats li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border: 1px solid var(--thin-line);
+    border-radius: 10px;
+}
+.dot {
+    flex: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid var(--text);
+    background: transparent;
+}
+.dot.online { background: #2e9d4f; border-color: #2e9d4f; }          /* filled = here */
+.dot.away { background: transparent; border-color: var(--x); }       /* hollow = away */
+.dot.waiting { border-style: dotted; }                               /* dotted = not joined yet */
+
+/* Phones held sideways: a more compact lobby so the room card fits without scrolling */
+@media (orientation: landscape) and (max-height: 520px) {
+    .onlineCard {
+        padding: 8px 12px;
+        gap: 5px;
+    }
+    .onlineCard h2 {
+        font-size: 1.2rem;
+    }
+    .onlineHint,
+    .roomLabel,
+    .orLine {
+        display: none;
+    }
+    .roomCode {
+        font-size: 2rem;
+    }
+    .seats {
+        gap: 4px;
+        font-size: 0.85rem;
+    }
+    .seats li {
+        padding: 4px 8px;
+    }
+    .onlineMessage {
+        min-height: 0;
+        font-size: 0.8rem;
+    }
+}
+
+/* ---------- Winning lines ---------- */
+
+.winLine {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 3;
+    overflow: visible;
+}
+.winLine line {
+    fill: none;
+    stroke-linecap: round;
+}
+.winLine .halo { stroke: var(--cell); stroke-width: 3.6; opacity: 0.55; }     /* soft outline so the line reads on any colour */
+.winLine .core { stroke: currentColor; stroke-width: 2.1; opacity: 0.92; filter: drop-shadow(0 0 2px currentColor); }
+.winLine.master .halo { stroke-width: 2.2; }
+.winLine.master .core { stroke-width: 1.1; }
+.winLine.X { color: var(--x); }
+.winLine.O { color: var(--o); }
+.winLine.animate line {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;                                                     /* pathLength=1: the line is "drawn" from its start to its end */
+    animation: drawLine 0.7s ease-out forwards;
+}
+.winLine.animate .core { animation-delay: 0.06s; }
+@keyframes drawLine { to { stroke-dashoffset: 0; } }
+
+/* ---------- Result banner (win / lose / draw) ---------- */
+
+.resultBanner {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: max(10px, env(safe-area-inset-top));
+    display: flex;
+    justify-content: center;
+    z-index: 50;
+    pointer-events: none;                                                     /* only the card itself can be tapped */
+}
+.resultCard {
+    pointer-events: auto;
+    position: relative;
+    width: min(92vw, 440px);
+    padding: 14px 44px 14px 18px;
+    border-radius: 16px;
+    text-align: center;
+    background: var(--card);
+    border: 2px solid var(--line);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
+}
+.resultTitle {
+    font-family: var(--font-display);
+    font-weight: normal;
+    font-size: clamp(1.35rem, 6vw, 2rem);
+    line-height: 1.15;
+}
+.resultSub {
+    margin-top: 4px;
+    font-family: var(--font-body);
+    font-size: 0.92rem;
+    color: var(--muted);
+}
+.resultClose {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    width: 32px;
+    min-height: 0;
+    height: 32px;
+    padding: 0;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    line-height: 1;
+}
+.resultCard.win {
+    border-color: #e6b400;
+    box-shadow: 0 0 0 3px rgba(255, 205, 40, 0.55), 0 0 30px 6px rgba(255, 205, 40, 0.5);   /* a warm glow around the result */
+}
+.resultCard.win .resultTitle { color: var(--text); text-shadow: 0 0 14px rgba(255, 205, 40, 0.7); }
+.resultCard.lose {
+    border-color: var(--thin-line);
+    background: var(--cell-disabled);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+}
+.resultCard.draw,
+.resultCard.neutral { border-style: dashed; }
+.resultCard.play.win { animation: popIn 0.55s cubic-bezier(0.2, 1.4, 0.4, 1); }
+.resultCard.play.lose { animation: sink 0.8s ease-out; }
+.resultCard.play.draw,
+.resultCard.play.neutral { animation: fadeDown 0.45s ease-out; }
+@keyframes popIn { 0% { transform: translateY(-30px) scale(0.85); opacity: 0; } 100% { transform: none; opacity: 1; } }
+@keyframes sink { 0% { transform: translateY(-24px); opacity: 0; } 55% { transform: translateY(6px); opacity: 1; } 75% { transform: translateX(-4px); } 90% { transform: translateX(3px); } 100% { transform: none; } }
+@keyframes fadeDown { 0% { transform: translateY(-14px); opacity: 0; } 100% { transform: none; opacity: 1; } }
+
+.fxCanvas {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 49;
+    pointer-events: none;
+}
+
+/* ---------- "this is the next thing to press" ---------- */
+
+.attention {
+    border-color: var(--o);
+    animation: attentionPulse 1.4s ease-in-out infinite;
+}
+@keyframes attentionPulse {
+    0%, 100% { box-shadow: 0 0 0 0 var(--attn-glow); }
+    50% { box-shadow: 0 0 14px 6px var(--attn-glow); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .winLine.animate line { animation: none; stroke-dashoffset: 0; stroke-dasharray: none; }
+    .resultCard.play { animation: none; }
+    .attention { animation: none; box-shadow: 0 0 12px 4px var(--attn-glow); }      /* still obvious, just not moving */
+}
